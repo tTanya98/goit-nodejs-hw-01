@@ -5,23 +5,21 @@ const { v4 } = require("uuid");
 const contactsPath = path.resolve(__dirname, "./db/contacts.json");
 
 async function listContacts() {
-  const data = await fs.readFile(contactsPath);
-  const contacts = JSON.parse(data);
-  return contacts;
+
   try {
+    const data = await fs.readFile(contactsPath);
+    const contacts = JSON.parse(data);
+    return contacts;
   } catch (error) {
     console.log(error.message);
   }
 }
 
 async function getContactById(contactId) {
-  try {
     const contacts = await listContacts();
-    const result = contacts.find(({ id }) => id === contactId);
-    return result;
-  } catch (error) {
-    console.log(error.message);
-  }
+    const contact = contacts.find(({ id }) => id === contactId);
+
+    return contact || null;
 }
 
 async function updateSourceFile(instance) {
@@ -51,7 +49,7 @@ async function removeContact(contactId) {
     updateSourceFile(changedCollection);
     return allContacts.filter(({ id }) => id === contactId);
   } catch (error) {
-    console.log(error);
+    return null;
   }
 }
 
